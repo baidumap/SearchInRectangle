@@ -1,0 +1,66 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+ </head>
+
+ <body>
+    <h2>拉框搜索餐馆--搜索完成后自定义</h2>
+    <div style="width:520px;height:340px;border:1px solid gray" id="container">
+    </div>
+    <input type="button" value="开启" onclick="pullBox.open();" />
+    <input type="button" value="关闭" onclick="pullBox.close();" />
+    <div id="result" style="width:520px;"></div>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInRectangle/1.2/src/SearchInRectangle_min.js"></script>
+   
+    <script type="text/javascript">
+        var map = new BMap.Map("container");
+        map.centerAndZoom(new BMap.Point(116.404, 39.915), 12); 
+        var keyword = "餐馆" ;
+        var markers = [];
+        var pullBox = new BMapLib.SearchInRectangle(map,keyword,{
+            renderOptions:{
+                map: null,
+                strokeWeight: 2,
+                strokeColor: "red",
+                opacity: 0.5,                
+                followText: "拖拽鼠标搜索"+ keyword +"",
+                autoViewport: false,
+                alwaysShowOverlay: false
+            },
+            onSearchComplete: function(result){                
+                if(markers.length){
+                  //自定义searchcomplete,不会自动清除上次的搜索结果，需要手动清除
+                    for( var j = 0 ; j < markers.length ; j ++){
+                        map.removeOverlay(markers[j]);
+                    }
+                }
+                for(var i = 0;i < result.getCurrentNumPois() ; i ++){                        
+                        (function(i){ 
+                            var tLocalPoi=result.getPoi(i);			
+                            //自定义icon
+                            var customIcon =new BMap.Icon("http://openapi.baidu.com/map/images/custom_a_j.png",new BMap.Size(28,37),
+                                {  
+                                    anchor : new BMap.Size(14, 37),//api 1.2新增
+                                    imageOffset: new BMap.Size(0 - i * 28, 0)
+                                }
+                            );           
+                            var marker = new BMap.Marker(tLocalPoi.point,{icon:customIcon}); 
+                            markers.push(marker);
+                            map.addOverlay(marker);
+                            marker.addEventListener("click",function(evt){		
+                                var infoWindow = new BMap.InfoWindow("<h4>"+ tLocalPoi.title +"</h4>",{
+                                    offset: new BMap.Size(0, -15)
+                                }); 
+                                map.openInfoWindow(infoWindow,tLocalPoi.point);
+                            });
+                        })(i)	
+                    }
+
+            }           
+        });        
+      
+        pullBox.setFillColor("white");
+    </script>
+ </body>
+</html>
