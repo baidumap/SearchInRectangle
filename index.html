@@ -49,27 +49,24 @@
       </section>
 
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     <script type="text/javascript">
         var map = new BMap.Map("container");
-        map.centerAndZoom(new BMap.Point(116.404, 39.915), 12); 
+        map.centerAndZoom(new BMap.Point(116.404, 39.915), 12);     
         var keyword = "餐馆" ;
         var pullBox = new BMapLib.SearchInRectangle(map,keyword,{
             renderOptions:{
                 map: map,
-                strokeWeight: 2,
+                strokeWeight: 3,
                 strokeColor: "red",
-                opacity: 0.7,                
+                fillColor:"white",
+                opacity: 0.5,                
                 followText: "拖拽鼠标搜索"+ keyword +"",
-                autoClose: false,
+                autoClose: true,
                 autoViewport: false,
-                panel: "result",
-                selectFirstResult: true
+                alwaysShowOverlay: false
             }
-        }); 
-        pullBox.setFillColor("white");
-        pullBox.setLineStyle("dashed");
-    
+        });     
+        pullBox.setLineStyle("dashed");    
     </script>
     
   </body>
